@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Уреди Профил</title>
+</head>
+<body>
+    <div class="container-editProfile">
+        <div class="menu">
+                 <div class="menu-items">
+                        <a href="{{ url_for('my_profile') }}">Мој профил</a>
+                 </div>
+            </div>
+        <h1>Уредување на профил</h1>
+
+        <form class="form-editProfile"method="POST" enctype="multipart/form-data" action="{{url_for('edit_profile')}}">
+            <label for="name">Име:</label><br>
+            <input type="text" id="name" name="name" value="{{ user['name'] }}" required><br>
+
+            <label for="surname">Презиме:</label><br>
+            <input type="text" id="surname" name="surname" value="{{ user['surname'] }}" required><br>
+
+            <label for="email">Е-маил:</label><br>
+            <input type="text" id="email" name="email" value="{{ user['email'] }}" required><br>
+
+            <label for="password">Нова лозинка (оставете празно ако не сакате да ја смените):</label><br>
+            <input type="password" id="password" name="password"><br>
+
+            <input type="hidden" name="current_profile_picture" value="{{ user['profile_picture'] }}">
+
+            <label for="profile_picture">Профилна слика:</label>
+            <input type="file" name="profile_picture" id="profile_picture"><br>
+
+            <button type="submit">Зачувај промени</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>Книги по жанр: {{ genre }}</title>
+</head>
+<body>
+<div class="container">
+    <div class="menu">
+        <div class="menu-items">
+            <a href="{{ url_for('home') }}">Почетна</a>
+            {% if 'user_id' in session %}
+                <a href="{{ url_for('my_profile') }}">Мој Профил</a>
+                <a href="{{ url_for('logout') }}">Одјави се</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Најави се</a>
+                <a href="{{ url_for('register') }}">Регистрирај се</a>
+            {% endif %}
+        </div>
+    </div>
+    <h1 class="title-genre">Книги во жанрот: {{ genre }}</h1>
+    <section class="books-section">
+        <div class="books-grid-genre">
+            {% if books %}
+                {% for book in books %}
+                    <a href="{{ url_for('book_details', book_id=book['book_id']) }}" class="card card-genre">
+                        <h3>{{ book['title'] }}</h3>
+                        <p>{{ book['author'] }}</p>
+                        <img src="{{ url_for('static', filename='images/' + book['book_cover_image']) }}"
+                                             alt="Насловна на книгата">
+                    </a>
+                {% endfor %}
+            {% else %}
+                <p>Нема книги во овој жанр.</p>
+            {% endif %}
+         </div>
+    </section>
+</div>
+<

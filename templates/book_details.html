@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <title>Детали за книгата</title>
+</head>
+<body>
+    <div class="container">
+        <div class="menu">
+            <div class="menu-items">
+                <a href="{{ url_for('home') }}">Почетна</a>
+                {% if 'user_id' in session %}
+                    <a href="{{ url_for('my_profile') }}">Мој профил</a>
+                    <a href="{{ url_for('logout') }}">Одјави се</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="book-content">
+            <div class="book-sidebar">
+                <img src="{{ url_for('static', filename='images/' + book['book_cover_image']) }}" alt="Насловна слика на книгата" class="book-cover">
+                {% if 'user_id' in session %}
+                    <form method="POST" action="{{ url_for('add_favorite', book_id=book['book_id']) }}">
+                        <button type="submit" class="favorite-button">Додај во омилени</button>
+                    </form>
+                {% endif %}
+            </div>
+
+            <div class="book-details">
+                <h1>{{ book['title'] }}</h1>
+                <p class="author">Автор: {{ book['author'] }}</p>
+                <p class="description">{{ book['description'] }}</p>
+
+                <h2>Рецензии:</h2>
+                <div class="book-reviews">
+                    {% if reviews %}
+                        <ul>
+                            {% for review in reviews %}
+                                <li>
+                                    <strong>Оцена: {{ review['rating'] }}</strong><br>
+                                    <p>{{ review['content'] }}</p>
+                                    <p><small>Додадено на: {{ review['reviews_date'] }}</small></p>
+                                    <p>{{ review['name'] }} {{ review['surname'] }}</p>
+
+                                    {% if session['user_id'] == review['user_id'] %}
+                                        <button data-review-id="{{ review['review_id'] }}" onclick="showEditForm(this)">Промени</button>
+
+                                        <div id="edit-form-{{ review['review_id'] }}" style="display: none;">
+                                            <form method="POST" action="{{ url_for('book_details', book_id=book['book_id']) }}">
+                                                <input type="hidden" name="review_id" value="{{ review['review_id'] }}">
+                                                <label for="content">Уреди рецензија:</label><br>
+                                                <textarea name="content">{{ review['content'] }}</textarea><br>
+                                                <label for="rating">Оцена (1-5):</label><br>
+                                                <input type="number" name="rating" value="{{ review['rating'] }}" min="1" max="5"><br>
+                                                <button type="submit">Зачувај промени</button>
+                                            </form>
+                                        </div>
+
+                                        <form method="POST" action="{{ url_for('delete_review', review_id=review['review_id']) }}" style="display:inline;">
+                                            <button type="submit" onclick="return confirm('Дали сте сигурни дека сакате да ја избришете рецензијата?')">Избриши</button>
+                                        </form>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>Нема рецензии за оваа книга.</p>
+                    {% endif %}
+                </div>
+
+                {% if 'user_id' in session %}
+                <div class="review-form">
+                    <h2>Остави рецензија:</h2>
+                    <form method="POST" action="{{ url_for('add_review', book_id=book['book_id']) }}">
+                        <label for="content">Содржина:</label><br>
+                        <textarea name="content" id="content" required></textarea><br>
+
+                        <label for="rating">Оцена (1-5):</label><br>
+                        <input type="number" name="rating" id="rating" min="1" max="5" required><br>
+
+                        <button type="submit">Додај рецензија</button>
+                    </form>
+                </div>
+                {% else %}
+                    <p class="najava">Мора да сте најавени за да додадете рецензија. <a href="{{ url_for('login') }}">Најави се</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

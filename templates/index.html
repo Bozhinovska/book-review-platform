@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книги</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+</head>
+<body>
+    <div class ="container">
+            <div class="menu">
+
+                 <div class="menu-items">
+                    {% if 'user_id' in session %}
+                        <a href="{{ url_for('my_profile') }}">Мој профил</a>
+                        <a href="{{ url_for('logout') }}">Одјави се</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}">Најави се</a>
+                        <a href="{{ url_for('register') }}">Регистрирај се</a>
+                    {% endif %}
+                 </div>
+                <form class="search-form" onsubmit="return false;">
+                <input type="search" id="search-input" placeholder="Пребарувај по наслов" oninput="searchBooks()">
+                <button type="submit">Барај</button>
+                </form>
+            </div>
+            <section class="hero">
+                <div class="hero-left">
+                    <h1>Мојата Книга Мојата Приказна</h1>
+                </div>
+                <div class="hero-right">
+                    <ul>
+                        <li><a href="/genre/Кoмедија">Кoмедија</a></li>
+                        <li><a href="/genre/Пoeзија">Пoeзија</a></li>
+                        <li><a href="/genre/Роман">Роман</a></li>
+                        <li><a href="/genre/Фикција">Фикција</a></li>
+                        <li><a href="/genre/Хорор">Хорор</a></li>
+                        <li><a href="/genre/Биографија">Биографија</a></li>
+                        <li><a href="/genre/Историја">Историја</a></li>
+                        <li><a href="/genre/Фантазија">Фантазија</a></li>
+                        <li><a href="/genre/Класици">Класици</a></li>
+                    </ul>
+                </div>
+            </section>
+            <section class="books-section">
+                <div class="books-grid">
+                    {% for book in books %}
+                        <div class="book-item">
+                            <a href="{{ url_for('book_details', book_id=book['book_id']) }}" class="card">
+                                <h3 class="book-title">{{ book['title'] }}</h3>
+                                <p>{{ book['author'] }}</p>
+                                <img src="{{ url_for('static', filename='images/' + book['book_cover_image']) }}"
+                                     alt="Насловна на книгата">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+    </div>
+</body>
+</html>

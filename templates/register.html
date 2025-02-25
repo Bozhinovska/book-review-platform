@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_register.css') }}">
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <title>Регистрација</title>
+</head>
+<body>
+<div class="container">
+    <div class="menu">
+        <div class="menu-items">
+            {% if 'user_id' in session %}
+            <p>Здраво, {{ session['name'] }}</p>
+            <a href="{{ url_for('home') }}">Почетна</a>
+            <a href="{{ url_for('my_profile') }}">Мој Профил</a>
+            <a href="{{ url_for('logout') }}">Одјави се</a>
+            {% else %}
+            <a href="{{ url_for('home') }}">Почетна</a>
+                    {% endif %}
+                 </div>
+            </div>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+    <form method="POST" onsubmit="return validateRegisterForm()">
+        <label for="name">Име:</label><br>
+        <input type="text" id="name" name="name" ><br>
+
+        <label for="surname">Презиме:</label><br>
+        <input type="text" id="surname" name="surname" ><br>
+
+        <label for="email">Емаил:</label><br>
+        <input type="email" id="email" name="email" ><br>
+
+        <label for="password">Лозинка:</label><br>
+        <input type="password" id="password" name="password" ><br>
+
+        <label for="confirm_password">Потврди лозинка:</label><br>
+        <input type="password" id="confirm_password" name="confirm_password" ><br>
+
+        <button type="submit">Регистрирај се</button>
+    </form>
+
+    <p>Веќе имате профил? <a href="{{ url_for('login') }}">Најави се</a></p>
+    </div>
+</body>
+</html>
